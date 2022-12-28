@@ -1,0 +1,65 @@
+
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+int precedence(char c){
+    if(c=='^')
+    return 3;
+    if(c=='*'||c=='/')
+    return 2;
+    else if(c=='+'||c=='-')
+    return 1;
+    else return -1;
+}
+string infixpostfix(stack<char> s,string x){
+    string postfix;
+    for(int i=0;i<x.length();i++){
+        if(x[i]=='('){
+            s.push(x[i]);
+        }
+        else if((x[i]>='a'&&x[i]<='z')||(x[i]>='A'&&x[i]<='Z'))
+        postfix=postfix+x[i];
+        else if(x[i]==')'){
+        while(s.top()!='('&&(!s.empty())){
+        postfix+=s.top();
+        s.pop();
+        }
+        if(s.top()=='(')
+        s.pop();
+    }
+    else{
+        if(s.empty()){
+            s.push(x[i]);
+        }
+        else{
+        if(precedence(x[i])>precedence(s.top()))
+        s.push(x[i]);
+        else if((precedence(x[i])==precedence(s.top()))&&x[i]=='^')
+        s.push(x[i]);
+        else{
+        while(!s.empty()&&precedence(x[i])<=precedence(s.top())){
+            postfix+=s.top();
+            s.pop();
+        }
+        s.push(x[i]);
+        }
+    }
+}
+}
+    while(!s.empty()){
+    postfix+=s.top();
+    s.pop();
+}
+    return postfix;
+}
+ int main(){
+     string infix;
+     string postfix;
+     cout<<"enter infix expression:"<<endl;
+     cin>>infix;
+     stack<char>s1;
+     postfix=infixpostfix(s1,infix);
+     cout<<"Postfix expression:"<<endl;
+     cout<<postfix;
+     return 0;
+ }
